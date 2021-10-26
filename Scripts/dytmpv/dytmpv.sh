@@ -2,6 +2,7 @@
 
 QUALITIES="1080\n720\n480\n360\n240\n"
 DMENU_ARGS="-fn monospace:20"
+URL_REGEX="https://www.youtube.com/watch?=*"
 QUALITY_FMT=""
 SAVE_LOCATION=$HOME/Videos
 
@@ -47,19 +48,25 @@ watch_video() {
 
 check_deps
 
-VID_URL=$(xclip -selection clipboard -o)
+VID_URL=$(xclip -selection clipboard -o | egrep $URL_REGEX 2> /dev/null)
 
-notify-send "DYTMPV" "Video $VID_URL"
+if [ ! -z "$VID_URL" ]; then 
+        notify-send "DYTMPV" "Video $VID_URL"
+else
+        notify-send "DYTMPV" "Invalid Youtube URL"
+        exit 1
+fi
 
 CHOISE=$(printf "Watch\nDownload\n" | dmenu -p "Video: $VID_URL" $DMENU_ARGS)
 
 if [ "$CHOISE" = "Watch" ]; then
 				get_quality_fmt
+				notify-send "DYTMPV" "Playing $VID_URL"
 				mpv --ytdl-format="$QUALITY_FMT" "$VID_URL"
 elif [ "$CHOISE" = "Download" ]; then
 				get_quality_fmt
 				mkdir $SAVE_LOCATION -p
-				notify-send "DYTMPV" "Downloading $VID_URL" -t 3
+				notify-send "DYTMPV" "Downloading $VID_URL"
 				youtube-dl -f "$QUALITY_FMT" $VID_URL -o "$SAVE_LOCATION/%(title)s.%(ext).s" && \
 								notify-send "DYTMPV" "Download completed successfully" || \
 								notify-send "DYTMPV" "Failed to download the video"
