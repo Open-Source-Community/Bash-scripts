@@ -3,6 +3,7 @@
 
 ### Installation/Usage:
 * put the script in ```mpv dytmpv.sh $HOME/.local/bin/dytmpv```.
+* give it the execution permession ```chmod +x $HOME/.local/bin/dytmpv```
 * run it by ```$ dytmpv``` for the first time to install the dependencies.
 * assign a keyboard shortcut to execute it.
 
