@@ -1,6 +1,6 @@
 # System info menu
 
-system info menu to display some info about your os 
+system info menu to display some info about your system
 
 ## Usage
 
